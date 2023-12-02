@@ -117,11 +117,11 @@ Serializer* Serializer::addDouble(double val) {
 }
 
 Serializer* Serializer::addString(std::string str) {
-	addUint(str.length(), 32);
-
 	for (auto c : str) {
 		addUint(c, 8);	// 1 byte per char, doesn't handle wide strings
 	}
+
+	addUint(0, 8);
 
 	return this;
 }
@@ -172,11 +172,14 @@ double Serializer::readDouble() {
 }
 
 std::string Serializer::readString() {
-	uint32_t length = readUint(32);
 	std::string str = "";
 
-	for (uint i = 0; i < length; i++) {
-		str += readUint(8);
+	for (uint i = curBitPos / 8; i < byteArray.size(); i++) {
+		char c = readUint(8);
+
+		if (c == '\x00') break;
+
+		str += c;
 	}
 
 	return str;

@@ -56,7 +56,8 @@ class Serializer {
 	Serializer* addDouble(double);
 
 	/**
-	 * Adds a std::string to the byteArray.
+	 * Adds a std::string to the byteArray using null-termination. It is very
+	 * important that the string does not contain '\x00'.
 	 */
 	Serializer* addString(std::string);
 
