@@ -157,6 +157,9 @@ float Serializer::readFloat() {
 	int sign = readBit() ? -1 : 1;
 	int exponent = readInt(8);
 	double normalized = readUint(23);
+
+	if (exponent == 0 && normalized == 0) return 0;
+
 	double mantissa = normalized / FLOAT_32_N_FACTOR + 1;
 
 	return sign * std::pow(2, exponent) * mantissa;
@@ -166,6 +169,9 @@ double Serializer::readDouble() {
 	int sign = readBit() ? -1 : 1;
 	int exponent = readInt(11);
 	double normalized = readUint(52);
+
+	if (exponent == 0 && normalized == 0) return 0;
+
 	double mantissa = normalized / FLOAT_64_N_FACTOR + 1;
 
 	return sign * std::pow(2, exponent) * mantissa;
